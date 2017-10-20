@@ -7,8 +7,11 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 @Data
@@ -40,11 +43,21 @@ public class ParkingMeterService {
 
     }
 
+    public void startParkingMeter(ParkingMeter parkingMeter){
+        parkingMeter.setOccupied(true);
+        parkingMeter.setStartTime(new Timestamp(System.currentTimeMillis()));
+    }
+
     public double resetParkingMeter(ParkingMeter parkingMeter, Driver driver){
         driver.setParkingMeter(null);
         parkingMeter.setOccupied(false);
-        parkingMeter.setEndTime(LocalDateTime.now());
-        double diffInMinutes = Math.ceil((double) java.time.Duration.between(parkingMeter.getStartTime(),parkingMeter.getEndTime()).toMinutes());
+        parkingMeter.setEndTime(new Timestamp(System.currentTimeMillis()));
+        double diffInMinutes = Math.ceil((double) java.time.Duration.
+                between(LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getStartTime().getTime()),
+                        TimeZone.getDefault().toZoneId()),
+                        LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getEndTime().getTime()),
+                                TimeZone.getDefault().toZoneId()))
+                .getSeconds()/60);
         System.out.println("Your car has been here for "+diffInMinutes);
         return diffInMinutes;
     }
@@ -57,14 +70,9 @@ public class ParkingMeterService {
         }
     }
 
-
     public void chargeDriverAccount(Driver driver, double AmountToBePaid){
         String bankAccount = driver.getBankAccountNumber();
         System.out.println("You sent a payment of "+AmountToBePaid+"PLN");
-
-
-
-
     }
 
 }

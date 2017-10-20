@@ -44,12 +44,9 @@ public class DriverController {
         ParkingMeter parkingMeter = parkingMeterService.findById(parkingMeterId);
         Driver driver = driverService.findById(driverId);
         driver.setParkingMeter(parkingMeter);
-        parkingMeter.setOccupied(true);
-        parkingMeter.setStartTime(LocalDateTime.now());
+        parkingMeterService.startParkingMeter(parkingMeter);
         parkingMeterService.update(parkingMeter);
         driverService.updateDriver(driver,parkingMeter);
-
-
     }
 
     @PostMapping("stop/{driverId}")

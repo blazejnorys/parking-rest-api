@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,13 +18,13 @@ public class ParkingMeter {
     @GeneratedValue
     private long id;
     private boolean occupied = false;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Timestamp startTime;
+    private Timestamp endTime;
 
     public ParkingMeter() {
     }
 
-    public ParkingMeter(boolean occupied, LocalDateTime startTime, LocalDateTime endTime) {
+    public ParkingMeter(boolean occupied, Timestamp startTime, Timestamp endTime) {
         this.occupied = occupied;
         this.startTime = startTime;
         this.endTime = endTime;
