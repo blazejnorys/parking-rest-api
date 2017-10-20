@@ -9,6 +9,8 @@ import com.demo.service.ParkingMeterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class DriverController {
     ParkingMeterService parkingMeterService;
     @Autowired
     ParkingEventService parkingEventService;
+    HttpServletResponse httpServletResponse;
 
 
     @GetMapping("/drivers")
@@ -28,7 +31,7 @@ public class DriverController {
         return driverService.findAll();
     }
 
-    @PostMapping("/driver")
+    @PostMapping("/drivers")
     public Driver addDriver(
             @RequestParam("name") String name,
             @RequestParam("surname") String surname,
@@ -40,16 +43,20 @@ public class DriverController {
     }
 
     @PostMapping("start/{driverId}/{parkingMeterId}")
-    public void startParkingMeter(
+    public String startParkingMeter(
             @PathVariable Long driverId,
             @PathVariable Long parkingMeterId
     ){
         ParkingMeter parkingMeter = parkingMeterService.findById(parkingMeterId);
+        if(parkingMeter.isOccupied()){
+            return "This spot is occupied. Please choose another one";
+        }
         Driver driver = driverService.findById(driverId);
         driver.setParkingMeter(parkingMeter);
         parkingMeterService.startParkingMeter(parkingMeter);
         parkingMeterService.update(parkingMeter);
         driverService.updateDriver(driver,parkingMeter);
+        return "You have chosen spot nr "+parkingMeterId;
     }
 
     @PostMapping("stop/{driverId}")

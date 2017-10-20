@@ -52,14 +52,14 @@ public class ParkingMeterService {
         driver.setParkingMeter(null);
         parkingMeter.setOccupied(false);
         parkingMeter.setEndTime(new Timestamp(System.currentTimeMillis()));
-        double diffInMinutes = Math.ceil((double) java.time.Duration.
+        double diffInHours = Math.ceil((double) java.time.Duration.
                 between(LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getStartTime().getTime()),
                         TimeZone.getDefault().toZoneId()),
                         LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getEndTime().getTime()),
                                 TimeZone.getDefault().toZoneId()))
-                .getSeconds()/60);
-        System.out.println("Your car has been here for "+diffInMinutes+" hr");
-        return diffInMinutes;
+                .getSeconds()/3600);
+        System.out.println("Your car has been here for "+diffInHours+" hr");
+        return diffInHours;
     }
 
     public double calculateAmountToBePaid(double diffInHours, Driver driver) {
