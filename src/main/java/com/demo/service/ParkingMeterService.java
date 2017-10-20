@@ -58,7 +58,7 @@ public class ParkingMeterService {
                         LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getEndTime().getTime()),
                                 TimeZone.getDefault().toZoneId()))
                 .getSeconds()/60);
-        System.out.println("Your car has been here for "+diffInMinutes);
+        System.out.println("Your car has been here for "+diffInMinutes+" hr");
         return diffInMinutes;
     }
 

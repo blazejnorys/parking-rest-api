@@ -4,6 +4,7 @@ package com.demo.controller;
 import com.demo.model.Driver;
 import com.demo.model.ParkingMeter;
 import com.demo.service.DriverService;
+import com.demo.service.ParkingEventService;
 import com.demo.service.ParkingMeterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ public class DriverController {
     DriverService driverService;
     @Autowired
     ParkingMeterService parkingMeterService;
+    @Autowired
+    ParkingEventService parkingEventService;
 
 
     @GetMapping("/drivers")
@@ -50,7 +53,7 @@ public class DriverController {
     }
 
     @PostMapping("stop/{driverId}")
-    public void stopParkingMeter(
+    public String stopParkingMeter(
             @PathVariable Long driverId
     ){
         Driver driver = driverService.findById(driverId);
@@ -59,6 +62,8 @@ public class DriverController {
         double calculatedAmountToBePaid = parkingMeterService.calculateAmountToBePaid(diffInHours,driver);
         parkingMeterService.chargeDriverAccount(driver, calculatedAmountToBePaid);
         parkingMeterService.update(parkingMeter);
+        parkingEventService.addNewEvent(calculatedAmountToBePaid,parkingMeter.getEndTime());
+        return "You sent a payment of "+calculatedAmountToBePaid+"PLN";
 
     }
 }
