@@ -5,7 +5,6 @@ import com.demo.model.Driver;
 import com.demo.model.ParkingMeter;
 import com.demo.service.DriverService;
 import com.demo.service.ParkingMeterService;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +18,7 @@ public class DriverController {
     DriverService driverService;
     @Autowired
     ParkingMeterService parkingMeterService;
+
 
     @GetMapping("/drivers")
     public List<Driver> getAllDrivers(){
@@ -52,19 +52,16 @@ public class DriverController {
 
     }
 
-    @PostMapping("stop/{driverId}/{parkingMeterId}")
-    public String stopParkingMeter(
-            @PathVariable Long driverId,
-            @PathVariable Long parkingMeterId
+    @PostMapping("stop/{driverId}")
+    public void stopParkingMeter(
+            @PathVariable Long driverId
     ){
         Driver driver = driverService.findById(driverId);
         ParkingMeter parkingMeter = driver.getParkingMeter();
-        driver.setParkingMeter(null);
-        parkingMeter.setOccupied(false);
-        parkingMeter.setEndTime(LocalDateTime.now());
-        long diffInMinutes = java.time.Duration.between(parkingMeter.getStartTime(),parkingMeter.getEndTime()).toMinutes();
-        System.out.println(diffInMinutes);
+        double diffInHours = parkingMeterService.resetParkingMeter(parkingMeter,driver);
+        double calculatedAmountToBePaid = parkingMeterService.calculateAmountToBePaid(diffInHours,driver);
+        parkingMeterService.chargeDriverAccount(driver, calculatedAmountToBePaid);
         parkingMeterService.update(parkingMeter);
-        return "Time in minutes: " +diffInMinutes;
+
     }
 }

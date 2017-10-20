@@ -20,6 +20,8 @@ public class Driver {
     private String name;
     private String surname;
     private String car;
+    private String bankAccountNumber;
+    private boolean isVip;
     @OneToOne
     ParkingMeter parkingMeter;
 
