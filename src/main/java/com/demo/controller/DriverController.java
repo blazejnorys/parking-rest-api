@@ -9,9 +9,6 @@ import com.demo.service.ParkingMeterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -23,7 +20,6 @@ public class DriverController {
     ParkingMeterService parkingMeterService;
     @Autowired
     ParkingEventService parkingEventService;
-    HttpServletResponse httpServletResponse;
 
 
     @GetMapping("/drivers")
@@ -55,7 +51,7 @@ public class DriverController {
         driver.setParkingMeter(parkingMeter);
         parkingMeterService.startParkingMeter(parkingMeter);
         parkingMeterService.update(parkingMeter);
-        driverService.updateDriver(driver,parkingMeter);
+        driverService.updateDriverParkingSpot(driver,parkingMeter);
         return "You have chosen spot nr "+parkingMeterId;
     }
 

@@ -12,7 +12,7 @@ public class ParkingRateCalculatorPlnService implements ParkingRatesCalculator {
         if (time <= 1) {
             return amountToBePaid = 1;
         }else if(time<=2){
-            return amountToBePaid = 2;
+            return amountToBePaid = 1+2;
         } else {
             amountToBePaid = 3;
             for (double i = 1; i <= time-2; i++) {

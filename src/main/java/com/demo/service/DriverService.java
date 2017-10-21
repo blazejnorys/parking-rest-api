@@ -29,7 +29,7 @@ public class DriverService {
         return driverRepository.findOne(id);
     }
 
-    public void updateDriver(Driver driver, ParkingMeter parkingMeter){
+    public void updateDriverParkingSpot(Driver driver, ParkingMeter parkingMeter){
         Driver driverToUpdate = driverRepository.findOne(driver.getId());
         driverToUpdate.setParkingMeter(parkingMeter);
     }

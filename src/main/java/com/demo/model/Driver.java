@@ -33,4 +33,12 @@ public class Driver {
         this.surname = surname;
         this.car = car;
     }
+
+    public Driver(String name, String surname, String car, String bankAccountNumber, boolean isVip) {
+        this.name = name;
+        this.surname = surname;
+        this.car = car;
+        this.bankAccountNumber = bankAccountNumber;
+        this.isVip = isVip;
+    }
 }

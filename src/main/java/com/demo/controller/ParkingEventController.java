@@ -21,12 +21,12 @@ public class ParkingEventController {
     }
 
     @GetMapping("/events-sum")
-    public List<ParkingEvent> getPaymentSum(){
+    public double getPaymentSum(){
         return parkingEventService.getPaymentSum();
     }
 
     @GetMapping("/events-sum-date/{year}/{month}/{day}")
-    public List<ParkingEvent> getPaymentByDate(
+    public double getPaymentByDate(
             @PathVariable String year,
             @PathVariable String month,
             @PathVariable String day

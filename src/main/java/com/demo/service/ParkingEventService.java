@@ -25,11 +25,11 @@ public class ParkingEventService {
         parkingEventRepository.saveAndFlush(parkingEvent);
     }
 
-    public List<ParkingEvent> getPaymentSum(){
+    public double getPaymentSum(){
         return parkingEventRepository.getPaymentSum();
     }
 
-    public List<ParkingEvent> getPaymentSumByDate(String year, String month, String day){
+    public double getPaymentSumByDate(String year, String month, String day){
         String first =year+"-"+month+"-"+day;
         String last =year+"-"+month+"-"+day;
         first +=" 00:00:00.000000";
