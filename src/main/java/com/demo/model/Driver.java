@@ -28,11 +28,6 @@ public class Driver {
     public Driver() {
     }
 
-    public Driver(String name, String surname, String car) {
-        this.name = name;
-        this.surname = surname;
-        this.car = car;
-    }
 
     public Driver(String name, String surname, String car, String bankAccountNumber, boolean isVip) {
         this.name = name;

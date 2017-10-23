@@ -31,9 +31,12 @@ public class DriverController {
     public Driver addDriver(
             @RequestParam("name") String name,
             @RequestParam("surname") String surname,
-            @RequestParam("car") String car
+            @RequestParam("car") String car,
+            @RequestParam("bankAccountNumber") String bankAccountNumber,
+            @RequestParam("isVip") boolean isVip
+
     ){
-         Driver driver = new Driver(name,surname,car);
+         Driver driver = new Driver(name,surname,car,bankAccountNumber,isVip);
          driverService.addNewDriver(driver);
             return driver;
     }

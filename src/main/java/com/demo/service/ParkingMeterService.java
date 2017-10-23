@@ -22,8 +22,8 @@ public class ParkingMeterService {
     @Autowired
     ParkingRatesCalculator parkingRatesCalculator;
 
-    public void addNewParkingMeter(ParkingMeter parkingMeter){
-        parkingMeterRepository.saveAndFlush(parkingMeter);
+    public ParkingMeter addNewParkingMeter(ParkingMeter parkingMeter){
+       return parkingMeterRepository.saveAndFlush(parkingMeter);
     }
 
     public List<ParkingMeter> findAll(){

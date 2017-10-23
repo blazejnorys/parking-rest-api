@@ -88,7 +88,7 @@ public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTe
     public void shouldResetParkingMeter(){
         //given
         ParkingMeter parkingMeter = new ParkingMeter(true,new Timestamp(10L),null);
-        Driver driver = new Driver("TestDriverName","TestDriveSurname","TestDriverCar");
+        Driver driver = new Driver("TestDriverName","TestDriveSurname","TestDriverCar","43523455234",false);
         driver.setParkingMeter(parkingMeter);
         //when
         double diffInHours = parkingMeterService.resetParkingMeter(parkingMeter,driver);

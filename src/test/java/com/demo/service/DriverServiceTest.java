@@ -22,9 +22,9 @@ public class DriverServiceTest extends AbstractTransactionalJUnit4SpringContextT
     @Autowired
     DriverService driverService;
 
-    Driver testDriver = new Driver("TestDriverName","TestDriverSurname","TestDrvierCar");
-    Driver testDriver1 = new Driver("TestDriverName1","TestDriverSurname1","TestDrvierCar1");
-    Driver testDriver2 = new Driver("TestDriverName2","TestDriverSurname2","TestDrvierCar2");
+    Driver testDriver = new Driver("TestDriverName","TestDriverSurname","TestDrvierCar","52344",true);
+    Driver testDriver1 = new Driver("TestDriverName1","TestDriverSurname1","TestDrvierCar1","452345",false);
+    Driver testDriver2 = new Driver("TestDriverName2","TestDriverSurname2","TestDrvierCar2","7456546",true);
     ParkingMeter parkingMeter = new ParkingMeter(false,new Timestamp(10L),new Timestamp(20L));
 
     @Before
@@ -46,7 +46,7 @@ public class DriverServiceTest extends AbstractTransactionalJUnit4SpringContextT
     @Test
     public void shouldAddDriver(){
         //given
-        Driver driver = new Driver("TestDriverName3","TestDriverSurname3","TestDrvierCar3");
+        Driver driver = new Driver("TestDriverName3","TestDriverSurname3","TestDrvierCar3","43523512",false);
         //when
         driverService.addNewDriver(driver);
         Driver driverById = driverService.findById(driver.getId());
