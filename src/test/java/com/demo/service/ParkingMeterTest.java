@@ -18,33 +18,33 @@ import java.util.List;
 public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Autowired
-    ParkingMeterService parkingMeterService;
+    private ParkingMeterService parkingMeterService;
 
     @Test
-    public void shouldListAllParkingMeters(){
+    public void shouldListAllParkingMeters() {
         //given
         //when
-        List<ParkingMeter> parkingMeterList=parkingMeterService.findAll();
+        List<ParkingMeter> parkingMeterList = parkingMeterService.findAll();
         //then
         Assertions.assertThat(parkingMeterList.size()).isEqualTo(2);
     }
 
     @Test
-    public void shouldAddNewParkingMeter(){
+    public void shouldAddNewParkingMeter() {
         //given
-        ParkingMeter parkingMeter = new ParkingMeter(false,new Timestamp(10L),new Timestamp(20L));
+        ParkingMeter parkingMeter = new ParkingMeter(false, new Timestamp(10L), new Timestamp(20L));
         //when
         parkingMeterService.addNewParkingMeter(parkingMeter);
-        List<ParkingMeter> parkingMeterList=parkingMeterService.findAll();
+        List<ParkingMeter> parkingMeterList = parkingMeterService.findAll();
         //then
         Assertions.assertThat(parkingMeterList.size()).isEqualTo(3);
 
     }
 
     @Test
-    public void shouldFindById(){
+    public void shouldFindById() {
         //given
-        ParkingMeter parkingMeter = new ParkingMeter(false,new Timestamp(500000L),new Timestamp(10000000L));
+        ParkingMeter parkingMeter = new ParkingMeter(false, new Timestamp(500000L), new Timestamp(10000000L));
         //when
         parkingMeterService.addNewParkingMeter(parkingMeter);
         ParkingMeter parkingMeterById = parkingMeterService.findById(parkingMeter.getId());
@@ -55,9 +55,9 @@ public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Test
-    public void shouldUpdateParkingMeter(){
+    public void shouldUpdateParkingMeter() {
         //given
-        ParkingMeter parkingMeter = new ParkingMeter(false,new Timestamp(500000L),new Timestamp(10000000L));
+        ParkingMeter parkingMeter = new ParkingMeter(false, new Timestamp(500000L), new Timestamp(10000000L));
         parkingMeterService.addNewParkingMeter(parkingMeter);
         parkingMeter.setOccupied(true);
         parkingMeter.setStartTime(new Timestamp(10L));
@@ -72,9 +72,9 @@ public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Test
-    public void shouldStartParkingMeter(){
+    public void shouldStartParkingMeter() {
         //given
-        ParkingMeter parkingMeter = new ParkingMeter(false,null,null);
+        ParkingMeter parkingMeter = new ParkingMeter(false, null, null);
         parkingMeterService.addNewParkingMeter(parkingMeter);
         //when
         parkingMeterService.startParkingMeter(parkingMeter);
@@ -85,34 +85,41 @@ public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Test
-    public void shouldResetParkingMeter(){
+    public void shouldStopParkingMeter() {
         //given
-        ParkingMeter parkingMeter = new ParkingMeter(true,new Timestamp(10L),null);
-        Driver driver = new Driver("TestDriverName","TestDriveSurname","TestDriverCar","43523455234",false);
+        ParkingMeter parkingMeter = new ParkingMeter(true, new Timestamp(10L), null);
+        Driver driver = new Driver("TestDriverName", "TestDriveSurname", "TestDriverCar", "43523455234", false);
         driver.setParkingMeter(parkingMeter);
         //when
-        double diffInHours = parkingMeterService.resetParkingMeter(parkingMeter,driver);
-        System.out.println(diffInHours);
+        parkingMeterService.stopParkingMeter(parkingMeter, driver);
         //then
         Assertions.assertThat(parkingMeter.isOccupied()).isEqualTo(false);
         Assertions.assertThat(parkingMeter.getEndTime()).isNotNull();
         Assertions.assertThat(driver.getParkingMeter()).isNull();
-        Assertions.assertThat(diffInHours).isGreaterThan(0);
     }
 
     @Test
-    public void shouldCalculateAmountToBePaidForRegularAndVipDriver(){
+    public void shouldResetParkingMeter() {
         //given
-        Driver testDriverRegular = new Driver("TestDriverName","TestDriveSurname","TestDriverCar","23123123",false);
-        Driver testDriverVip = new Driver("TestDriverName1","TestDriveSurname1","TestDriverCar1","324524234",true);
-        double diffInHours = 3.0;
-        //when
-        double amountToBePaidRegularDriver = parkingMeterService.calculateAmountToBePaid(diffInHours,testDriverRegular);
-        double amountToBePaidVipDriver = parkingMeterService.calculateAmountToBePaid(diffInHours,testDriverVip);
+        ParkingMeter parkingMeter = new ParkingMeter(false, new Timestamp(500000L), new Timestamp(10000000L));
         //then
-        Assertions.assertThat(amountToBePaidRegularDriver).isEqualTo(7.0);
-        Assertions.assertThat(amountToBePaidVipDriver).isEqualTo(5.0);
-
+        parkingMeterService.reset(parkingMeter);
+        //then
+        Assertions.assertThat(parkingMeter.getEndTime()).isNull();
+        Assertions.assertThat(parkingMeter.getStartTime()).isNull();
     }
 
+    @Test
+    public void shouldCalculateAmountToBePaidForRegularAndVipDriver() {
+        //given
+        ParkingMeter parkingMeter = new ParkingMeter(false, new Timestamp(946717810000L), new Timestamp(946726810000L));  //01.01.2000 10:10:10  --->  01.01.2000 12:40:10
+        Driver testDriverRegular = new Driver("TestDriverName", "TestDriveSurname", "TestDriverCar", "23123123", false);
+        Driver testDriverVip = new Driver("TestDriverName1", "TestDriveSurname1", "TestDriverCar1", "324524234", true);
+        //when
+        double amountToBePaidByRegular = parkingMeterService.calculateAmountToBePaid(parkingMeter, testDriverRegular);
+        double amountToBePaidByVip = parkingMeterService.calculateAmountToBePaid(parkingMeter, testDriverVip);
+        //then
+        Assertions.assertThat(amountToBePaidByRegular).isEqualTo(7.0);
+        Assertions.assertThat(amountToBePaidByVip).isEqualTo(5.0);
+    }
 }

@@ -15,61 +15,55 @@ import java.util.List;
 public class DriverController {
 
     @Autowired
-    DriverService driverService;
+    private DriverService driverService;
     @Autowired
-    ParkingMeterService parkingMeterService;
+    private ParkingMeterService parkingMeterService;
     @Autowired
-    ParkingEventService parkingEventService;
+    private ParkingEventService parkingEventService;
 
 
     @GetMapping("/drivers")
-    public List<Driver> getAllDrivers(){
+    public List<Driver> getAllDrivers() {
         return driverService.findAll();
     }
 
     @PostMapping("/drivers")
     public Driver addDriver(
-            @RequestParam("name") String name,
-            @RequestParam("surname") String surname,
-            @RequestParam("car") String car,
-            @RequestParam("bankAccountNumber") String bankAccountNumber,
-            @RequestParam("isVip") boolean isVip
-
-    ){
-         Driver driver = new Driver(name,surname,car,bankAccountNumber,isVip);
-         driverService.addNewDriver(driver);
-            return driver;
+            @RequestBody Driver myDriver
+    ) {
+        driverService.addNewDriver(myDriver);
+        return myDriver;
     }
 
     @PostMapping("start/{driverId}/{parkingMeterId}")
     public String startParkingMeter(
             @PathVariable Long driverId,
             @PathVariable Long parkingMeterId
-    ){
+    ) {
         ParkingMeter parkingMeter = parkingMeterService.findById(parkingMeterId);
-        if(parkingMeter.isOccupied()){
+        if (parkingMeter.isOccupied()) {
             return "This spot is occupied. Please choose another one";
         }
         Driver driver = driverService.findById(driverId);
         driver.setParkingMeter(parkingMeter);
         parkingMeterService.startParkingMeter(parkingMeter);
         parkingMeterService.update(parkingMeter);
-        driverService.updateDriverParkingSpot(driver,parkingMeter);
-        return "You have chosen spot nr "+parkingMeterId;
+        driverService.update(driver);
+        return "You have chosen spot nr " + parkingMeterId;
     }
 
     @PostMapping("stop/{driverId}")
     public String stopParkingMeter(
             @PathVariable Long driverId
-    ){
+    ) {
         Driver driver = driverService.findById(driverId);
         ParkingMeter parkingMeter = driver.getParkingMeter();
-        double diffInHours = parkingMeterService.resetParkingMeter(parkingMeter,driver);
-        double calculatedAmountToBePaid = parkingMeterService.calculateAmountToBePaid(diffInHours,driver);
+        parkingMeterService.stopParkingMeter(parkingMeter,driver);
+        double calculatedAmountToBePaid = parkingMeterService.calculateAmountToBePaid(parkingMeter, driver);
         parkingMeterService.chargeDriverAccount(driver, calculatedAmountToBePaid);
-        parkingMeterService.update(parkingMeter);
-        parkingEventService.addNewEvent(calculatedAmountToBePaid,parkingMeter.getEndTime());
-        return "You sent a payment of "+calculatedAmountToBePaid+"PLN";
+        parkingMeterService.reset(parkingMeter);
+        parkingEventService.addNewEvent(calculatedAmountToBePaid, parkingMeter.getEndTime());
+        return "You sent a payment of " + calculatedAmountToBePaid + "PLN";
 
     }
 }

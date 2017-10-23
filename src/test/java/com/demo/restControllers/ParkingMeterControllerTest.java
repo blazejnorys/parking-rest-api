@@ -28,13 +28,13 @@ public class ParkingMeterControllerTest extends AbstractTransactionalJUnit4Sprin
     @Autowired
     private MockMvc mvc;
     @Autowired
-    ParkingMeterService parkingMeterService;
+    private ParkingMeterService parkingMeterService;
     private MediaType mediaType = MediaType.APPLICATION_JSON;
 
     @Before
-    public void before(){
+    public void before() {
         ParkingMeter parkingMeter = new ParkingMeter(
-                true,new Timestamp(946681200000L),new Timestamp(949359600000L));// 01.01.2000 00:00:00, 01.02.2000 00:00:00
+                true, new Timestamp(946681200000L), new Timestamp(949359600000L));// 01.01.2000 00:00:00, 01.02.2000 00:00:00
         parkingMeterService.addNewParkingMeter(parkingMeter);
     }
 
@@ -53,18 +53,18 @@ public class ParkingMeterControllerTest extends AbstractTransactionalJUnit4Sprin
     }
 
     @Test
-    public void shouldListAllParkingMeters() throws Exception{
+    public void shouldListAllParkingMeters() throws Exception {
         mvc.perform(get("/parking-meter")
-        .contentType(mediaType))
+                .contentType(mediaType))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                .contentTypeCompatibleWith(mediaType))
-                .andExpect(jsonPath("$",hasSize(3)))
-                .andExpect(jsonPath("$[0].id",is(1)))
-                .andExpect(jsonPath("$[1].id",is(2)))
-                .andExpect(jsonPath("$[0].occupied",is(false)))
-                .andExpect(jsonPath("$[2].occupied",is(true)))
-                .andExpect(jsonPath("$[2].startTime",is(946681200000L)))
-                .andExpect(jsonPath("$[2].endTime",is(949359600000L)));
+                        .contentTypeCompatibleWith(mediaType))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[0].occupied", is(false)))
+                .andExpect(jsonPath("$[2].occupied", is(true)))
+                .andExpect(jsonPath("$[2].startTime", is(946681200000L)))
+                .andExpect(jsonPath("$[2].endTime", is(949359600000L)));
     }
 }

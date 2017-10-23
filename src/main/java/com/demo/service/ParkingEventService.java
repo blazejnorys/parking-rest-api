@@ -14,7 +14,7 @@ import java.util.List;
 public class ParkingEventService {
 
     @Autowired
-    ParkingEventRepository parkingEventRepository;
+    private ParkingEventRepository parkingEventRepository;
 
     public List<ParkingEvent> getAllEvents(){
         return parkingEventRepository.findAll();

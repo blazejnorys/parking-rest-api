@@ -15,23 +15,22 @@ import java.util.List;
 public class DriverService {
 
     @Autowired
-    DriverRepository driverRepository;
+    private DriverRepository driverRepository;
 
-    public void addNewDriver(Driver driver){
+    public void addNewDriver(Driver driver) {
         driverRepository.saveAndFlush(driver);
     }
 
-    public List<Driver> findAll(){
+    public List<Driver> findAll() {
         return driverRepository.findAll();
     }
 
-    public Driver findById(Long id){
+    public Driver findById(Long id) {
         return driverRepository.findOne(id);
     }
 
-    public void updateDriverParkingSpot(Driver driver, ParkingMeter parkingMeter){
-        Driver driverToUpdate = driverRepository.findOne(driver.getId());
-        driverToUpdate.setParkingMeter(parkingMeter);
+    public void update(Driver driver) {
+        driverRepository.saveAndFlush(driver);
     }
 
 

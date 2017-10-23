@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 
@@ -14,16 +13,16 @@ import java.util.List;
 public class ParkingMeterController {
 
     @Autowired
-    ParkingMeterService parkingMeterService;
+    private ParkingMeterService parkingMeterService;
 
     @PostMapping("parking-meter")
-    public ParkingMeter addParkingMeter(){
+    public ParkingMeter addParkingMeter() {
         ParkingMeter parkingMeter = new ParkingMeter();
         return parkingMeterService.addNewParkingMeter(parkingMeter);
     }
 
     @GetMapping("parking-meter")
-    public List<ParkingMeter> getAllParkingMeters(){
+    public List<ParkingMeter> getAllParkingMeters() {
         return parkingMeterService.findAll();
     }
 }

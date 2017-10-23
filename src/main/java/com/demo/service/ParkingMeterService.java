@@ -18,51 +18,56 @@ import java.util.TimeZone;
 public class ParkingMeterService {
 
     @Autowired
-    ParkingMeterRepository parkingMeterRepository;
+    private ParkingMeterRepository parkingMeterRepository;
     @Autowired
-    ParkingRatesCalculator parkingRatesCalculator;
+    private ParkingRatesCalculator parkingRatesCalculator;
 
-    public ParkingMeter addNewParkingMeter(ParkingMeter parkingMeter){
-       return parkingMeterRepository.saveAndFlush(parkingMeter);
+    public ParkingMeter addNewParkingMeter(ParkingMeter parkingMeter) {
+        return parkingMeterRepository.saveAndFlush(parkingMeter);
     }
 
-    public List<ParkingMeter> findAll(){
+    public List<ParkingMeter> findAll() {
         return parkingMeterRepository.findAll();
     }
 
-    public ParkingMeter findById(Long id){
+    public ParkingMeter findById(Long id) {
         return parkingMeterRepository.findOne(id);
     }
 
-    public void  update(ParkingMeter parkingMeter){
-        ParkingMeter parkingMeterToUpdate = parkingMeterRepository.findOne(parkingMeter.getId());
-        parkingMeterToUpdate.setStartTime(parkingMeter.getStartTime());
-        parkingMeterToUpdate.setEndTime(parkingMeter.getEndTime());
-        parkingMeterToUpdate.setOccupied(parkingMeter.isOccupied());
-        parkingMeterRepository.saveAndFlush(parkingMeterToUpdate);
+    public void update(ParkingMeter parkingMeter) {
+        parkingMeterRepository.saveAndFlush(parkingMeter);
 
     }
 
-    public void startParkingMeter(ParkingMeter parkingMeter){
+    public void reset(ParkingMeter parkingMeter) {
+        parkingMeter.setStartTime(null);
+        parkingMeter.setEndTime(null);
+        parkingMeterRepository.saveAndFlush(parkingMeter);
+
+    }
+
+    public void startParkingMeter(ParkingMeter parkingMeter) {
         parkingMeter.setOccupied(true);
         parkingMeter.setStartTime(new Timestamp(System.currentTimeMillis()));
     }
 
-    public double resetParkingMeter(ParkingMeter parkingMeter, Driver driver){
+    public void stopParkingMeter(ParkingMeter parkingMeter, Driver driver) {
         driver.setParkingMeter(null);
         parkingMeter.setOccupied(false);
         parkingMeter.setEndTime(new Timestamp(System.currentTimeMillis()));
-        double diffInHours = Math.ceil((double) java.time.Duration.
+    }
+
+    private double getDifferenceInHours(ParkingMeter parkingMeter){
+        return Math.ceil((double) java.time.Duration.
                 between(LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getStartTime().getTime()),
                         TimeZone.getDefault().toZoneId()),
                         LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getEndTime().getTime()),
                                 TimeZone.getDefault().toZoneId()))
-                .getSeconds()/3600);
-        System.out.println("Your car has been here for "+diffInHours+" hr");
-        return diffInHours;
+                .getSeconds() / 3600);
     }
 
-    public double calculateAmountToBePaid(double diffInHours, Driver driver) {
+    public double calculateAmountToBePaid(ParkingMeter parkingMeter, Driver driver) {
+        double diffInHours = this.getDifferenceInHours(parkingMeter);
         if (driver.isVip()) {
             return parkingRatesCalculator.calculateParkingRateVip(diffInHours);
         } else {
@@ -70,9 +75,9 @@ public class ParkingMeterService {
         }
     }
 
-    public void chargeDriverAccount(Driver driver, double AmountToBePaid){
+    public void chargeDriverAccount(Driver driver, double AmountToBePaid) {
         String bankAccount = driver.getBankAccountNumber();
-        System.out.println("You sent a payment of "+AmountToBePaid+"PLN");
+        System.out.println("You sent a payment of " + AmountToBePaid + "PLN");
     }
 
 }

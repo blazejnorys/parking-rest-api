@@ -17,10 +17,10 @@ import java.util.List;
 public class ParkingEventServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Autowired
-    ParkingEventService parkingEventService;
+    private ParkingEventService parkingEventService;
 
     @Test
-    public void shouldListAllEvents(){
+    public void shouldListAllEvents() {
         //given
         //when
         List<ParkingEvent> parkingEventList = parkingEventService.getAllEvents();
@@ -29,9 +29,9 @@ public class ParkingEventServiceTest extends AbstractTransactionalJUnit4SpringCo
     }
 
     @Test
-    public void shouldAddNewEvent(){
+    public void shouldAddNewEvent() {
         //given
-        parkingEventService.addNewEvent(10.0,new Timestamp(3123123L));
+        parkingEventService.addNewEvent(10.0, new Timestamp(3123123L));
         //when
         List<ParkingEvent> parkingEventsList = parkingEventService.getAllEvents();
         //then
@@ -41,7 +41,7 @@ public class ParkingEventServiceTest extends AbstractTransactionalJUnit4SpringCo
     }
 
     @Test
-    public void shouldReturnPaymenSum(){
+    public void shouldReturnPaymenSum() {
         //given
         //when
         double paymentSum = parkingEventService.getPaymentSum();
@@ -51,11 +51,11 @@ public class ParkingEventServiceTest extends AbstractTransactionalJUnit4SpringCo
     }
 
     @Test
-    public void shouldReturnPaymentSumByDate(){
+    public void shouldReturnPaymentSumByDate() {
         //given
         //when
-        double paymentSum20102017 = parkingEventService.getPaymentSumByDate("2017","10","20");
-        double paymentSum21102017 = parkingEventService.getPaymentSumByDate("2017","10","21");
+        double paymentSum20102017 = parkingEventService.getPaymentSumByDate("2017", "10", "20");
+        double paymentSum21102017 = parkingEventService.getPaymentSumByDate("2017", "10", "21");
         //then
         Assertions.assertThat(paymentSum20102017).isEqualTo(15.0);
         Assertions.assertThat(paymentSum21102017).isEqualTo(7);

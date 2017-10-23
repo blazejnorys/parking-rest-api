@@ -13,15 +13,15 @@ import java.util.List;
 public class ParkingEventController {
 
     @Autowired
-    ParkingEventService parkingEventService;
+    private ParkingEventService parkingEventService;
 
     @GetMapping("/events")
-    public List<ParkingEvent> getAllEvents(){
+    public List<ParkingEvent> getAllEvents() {
         return parkingEventService.getAllEvents();
     }
 
     @GetMapping("/events-sum")
-    public double getPaymentSum(){
+    public double getPaymentSum() {
         return parkingEventService.getPaymentSum();
     }
 
@@ -30,8 +30,8 @@ public class ParkingEventController {
             @PathVariable String year,
             @PathVariable String month,
             @PathVariable String day
-    ){
-        return parkingEventService.getPaymentSumByDate(year,month,day);
+    ) {
+        return parkingEventService.getPaymentSumByDate(year, month, day);
     }
 
 }
