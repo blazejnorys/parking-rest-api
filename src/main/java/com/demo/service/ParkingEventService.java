@@ -16,26 +16,26 @@ public class ParkingEventService {
     @Autowired
     private ParkingEventRepository parkingEventRepository;
 
-    public List<ParkingEvent> getAllEvents(){
+    public List<ParkingEvent> getAllEvents() {
         return parkingEventRepository.findAll();
     }
 
-    public void addNewEvent(double payment, Timestamp date){
-        ParkingEvent parkingEvent = new ParkingEvent(payment,date);
+    public void addNewEvent(double payment, Timestamp date) {
+        ParkingEvent parkingEvent = new ParkingEvent(payment, date);
         parkingEventRepository.saveAndFlush(parkingEvent);
     }
 
-    public double getPaymentSum(){
+    public double getPaymentSum() {
         return parkingEventRepository.getPaymentSum();
     }
 
-    public double getPaymentSumByDate(String year, String month, String day){
-        String first =year+"-"+month+"-"+day;
-        String last =year+"-"+month+"-"+day;
-        first +=" 00:00:00.000000";
-        last+=" 23:59:59.999999";
-        System.out.println(first);
-        System.out.println(last);
-        return parkingEventRepository.getPaymentSumByDate(Timestamp.valueOf(first),Timestamp.valueOf(last));
+    public double getPaymentSumByDate(String year, String month, String day) {
+        String first = year + "-" + month + "-" + day;
+        String last = year + "-" + month + "-" + day;
+        first += " 00:00:00.000000";
+        last += " 23:59:59.999999";
+        return parkingEventRepository.getPaymentSumByDate(Timestamp.valueOf(first), Timestamp.valueOf(last));
     }
+
+
 }
