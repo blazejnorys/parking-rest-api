@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 
-@Component
 @Entity
 @Data
 public class Driver {

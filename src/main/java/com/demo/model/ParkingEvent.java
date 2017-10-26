@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Component
 @Data
 public class ParkingEvent {
 

@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Component
 @Data
 public class ParkingMeter {
 
