@@ -1,5 +1,6 @@
 package com.demo.restControllers;
 
+import com.demo.model.ClientType;
 import com.demo.model.Driver;
 import com.demo.model.ParkingMeter;
 import com.demo.service.DriverService;
@@ -36,8 +37,8 @@ public class DriverControllerTest extends AbstractTransactionalJUnit4SpringConte
 
     @Before
     public void before() {
-        Driver restDriverTest = new Driver("RestDriverName", "RestDriverSurname", "RestDriverCar", "XXXXXXXX", false);
-        Driver restDriverTest1 = new Driver("VipRestDriverName", "VipRestDriverSurname", "VipRestDriverCar", "XXXXXXXX", true);
+        Driver restDriverTest = new Driver("RestDriverName", "RestDriverSurname", "RestDriverCar", "XXXXXXXX", ClientType.REGULAR);
+        Driver restDriverTest1 = new Driver("VipRestDriverName", "VipRestDriverSurname", "VipRestDriverCar", "XXXXXXXX", ClientType.VIP);
         driverService.addNewDriver(restDriverTest);
         driverService.addNewDriver(restDriverTest1);
     }
@@ -53,13 +54,13 @@ public class DriverControllerTest extends AbstractTransactionalJUnit4SpringConte
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[1].name", is("Marcin")))
                 .andExpect(jsonPath("$[2].surname", is("RestDriverSurname")))
-                .andExpect(jsonPath("$[1].vip", is(true)))
-                .andExpect(jsonPath("$[3].vip", is(true)));
+                .andExpect(jsonPath("$[1].clientType", is("VIP")))
+                .andExpect(jsonPath("$[3].clientType", is("VIP")));
     }
 
     @Test
     public void shouldAddNewDriver() throws Exception {
-        Driver newDriver = new Driver("X", "Y", "Tojota", "3243242", true);
+        Driver newDriver = new Driver("X", "Y", "Tojota", "3243242", ClientType.VIP);
         String driverJson = objectMapper.writeValueAsString(newDriver);
 
         mvc.perform(post("/drivers")
@@ -69,13 +70,13 @@ public class DriverControllerTest extends AbstractTransactionalJUnit4SpringConte
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("X")))
                 .andExpect(jsonPath("$.car", is("Tojota")))
-                .andExpect(jsonPath("$.vip", is(true)));
+                .andExpect(jsonPath("$.clientType", is("VIP")));
     }
 
     @Test
     public void shouldStartParkingMeter() throws Exception {
         ParkingMeter parkingMeter = new ParkingMeter(false, null, null);
-        Driver driver = new Driver("X", "Y", "Z", "M", false);
+        Driver driver = new Driver("X", "Y", "Z", "M", ClientType.REGULAR);
         driverService.addNewDriver(driver);
         parkingMeterService.addNewParkingMeter(parkingMeter);
         Long driverId = driver.getId();
@@ -84,8 +85,7 @@ public class DriverControllerTest extends AbstractTransactionalJUnit4SpringConte
         mvc.perform(post("/start/" + driverId + "/" + parkingMeterId)
                 .contentType(mediaType)
                 .accept(mediaType))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is("You have chosen spot nr " + parkingMeterId)));
+                .andExpect(status().isOk());
 
         mvc.perform(get("/drivers")
                 .contentType(mediaType))
@@ -96,14 +96,14 @@ public class DriverControllerTest extends AbstractTransactionalJUnit4SpringConte
                 .andExpect(jsonPath("$[4].id", is(driverId.intValue())))
                 .andExpect(jsonPath("$[4].name", is("X")))
                 .andExpect(jsonPath("$[4].surname", is("Y")))
-                .andExpect(jsonPath("$[4].vip", is(false)))
+                .andExpect(jsonPath("$[4].clientType", is("REGULAR")))
                 .andExpect(jsonPath("$[4].parkingMeter", is(notNullValue())));
     }
 
     @Test
     public void shouldStopParkingMeter() throws Exception {
         ParkingMeter parkingMeter = new ParkingMeter(false, null, null);
-        Driver driver = new Driver("X", "Y", "Z", "M", false);
+        Driver driver = new Driver("X", "Y", "Z", "M", ClientType.REGULAR);
         driverService.addNewDriver(driver);
         parkingMeterService.addNewParkingMeter(parkingMeter);
         Long driverId = driver.getId();
@@ -112,8 +112,7 @@ public class DriverControllerTest extends AbstractTransactionalJUnit4SpringConte
         mvc.perform(post("/start/" + driverId + "/" + parkingMeterId)
                 .contentType(mediaType)
                 .accept(mediaType))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is("You have chosen spot nr " + parkingMeterId)));
+                .andExpect(status().isOk());
 
 
         mvc.perform(post("/stop/" + driverId)
@@ -130,7 +129,7 @@ public class DriverControllerTest extends AbstractTransactionalJUnit4SpringConte
                 .andExpect(jsonPath("$[4].id", is(driverId.intValue())))
                 .andExpect(jsonPath("$[4].name", is("X")))
                 .andExpect(jsonPath("$[4].surname", is("Y")))
-                .andExpect(jsonPath("$[4].vip", is(false)))
+                .andExpect(jsonPath("$[4].clientType", is("REGULAR")))
                 .andExpect(jsonPath("$[4].parkingMeter", is(nullValue())));
     }
 }

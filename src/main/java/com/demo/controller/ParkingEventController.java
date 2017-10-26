@@ -7,13 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
 public class ParkingEventController {
 
-    @Autowired
     private ParkingEventService parkingEventService;
+
+    @Autowired
+    public ParkingEventController(ParkingEventService parkingEventService) {
+        this.parkingEventService = parkingEventService;
+    }
 
     @GetMapping("/events")
     public List<ParkingEvent> getAllEvents() {
@@ -25,13 +30,13 @@ public class ParkingEventController {
         return parkingEventService.getPaymentSum();
     }
 
-    @GetMapping("/events-sum-date/{year}/{month}/{day}")
+    @GetMapping("/events-sum-date/{day}/{month}/{year}")
     public double getPaymentByDate(
-            @PathVariable String year,
+            @PathVariable String day,
             @PathVariable String month,
-            @PathVariable String day
+            @PathVariable String year
     ) {
-        return parkingEventService.getPaymentSumByDate(year, month, day);
+        return parkingEventService.getPaymentSumByDate(day, month, year);
     }
 
 }

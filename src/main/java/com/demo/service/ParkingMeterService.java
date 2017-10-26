@@ -3,7 +3,6 @@ package com.demo.service;
 import com.demo.model.Driver;
 import com.demo.model.ParkingMeter;
 import com.demo.repository.ParkingMeterRepository;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
-@Data
 public class ParkingMeterService {
 
     @Autowired
@@ -57,27 +55,20 @@ public class ParkingMeterService {
         parkingMeter.setEndTime(new Timestamp(System.currentTimeMillis()));
     }
 
-    private double getDifferenceInHours(ParkingMeter parkingMeter){
-        return Math.ceil((double) java.time.Duration.
-                between(LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getStartTime().getTime()),
-                        TimeZone.getDefault().toZoneId()),
-                        LocalDateTime.ofInstant(Instant.ofEpochMilli(parkingMeter.getEndTime().getTime()),
-                                TimeZone.getDefault().toZoneId()))
+    private int getDifferenceInHours(ParkingMeter parkingMeter){
+        return (int)Math.ceil((double) java.time.Duration.
+                between(parkingMeter.getStartTime().toLocalDateTime(),parkingMeter.getEndTime().toLocalDateTime())
                 .getSeconds() / 3600);
     }
 
-    public double calculateAmountToBePaid(ParkingMeter parkingMeter, Driver driver) {
-        double diffInHours = this.getDifferenceInHours(parkingMeter);
-        if (driver.isVip()) {
-            return parkingRatesCalculator.calculateParkingRateVip(diffInHours);
-        } else {
-            return parkingRatesCalculator.calculateParkingRateRegular(diffInHours);
-        }
+    public double calculateParkingRate(ParkingMeter parkingMeter, Driver driver) {
+        int diffInHours = this.getDifferenceInHours(parkingMeter);
+            return (parkingRatesCalculator.calculateParkingRate(diffInHours,driver))/100;
     }
 
-    public void chargeDriverAccount(Driver driver, double AmountToBePaid) {
+    public void chargeDriverAccount(Driver driver, double amountToBePaid) {
         String bankAccount = driver.getBankAccountNumber();
-        System.out.println("You sent a payment of " + AmountToBePaid + "PLN");
+        double amountToBePaidAsDouble = amountToBePaid;
+        System.out.println("You sent a payment of " + amountToBePaidAsDouble + "PLN");
     }
-
 }

@@ -2,15 +2,18 @@ package com.demo.service;
 
 import com.demo.model.ParkingEvent;
 import com.demo.repository.ParkingEventRepository;
-import lombok.Data;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @Service
-@Data
 public class ParkingEventService {
 
     @Autowired
@@ -29,13 +32,10 @@ public class ParkingEventService {
         return parkingEventRepository.getPaymentSum();
     }
 
-    public double getPaymentSumByDate(String year, String month, String day) {
-        String first = year + "-" + month + "-" + day;
-        String last = year + "-" + month + "-" + day;
-        first += " 00:00:00.000000";
-        last += " 23:59:59.999999";
-        return parkingEventRepository.getPaymentSumByDate(Timestamp.valueOf(first), Timestamp.valueOf(last));
+    public double getPaymentSumByDate(String day, String month, String year) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("ddMMyyyy");
+        DateTime dateTimeStart = formatter.parseDateTime(day + month + year);
+        DateTime dateTimeEnd = dateTimeStart.plusDays(1).minusMillis(1);
+        return parkingEventRepository.getPaymentSumByDate(new Timestamp(dateTimeStart.getMillis()), new Timestamp(dateTimeEnd.getMillis()));
     }
-
-
 }

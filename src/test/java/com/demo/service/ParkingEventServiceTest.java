@@ -54,8 +54,8 @@ public class ParkingEventServiceTest extends AbstractTransactionalJUnit4SpringCo
     public void shouldReturnPaymentSumByDate() {
         //given
         //when
-        double paymentSum20102017 = parkingEventService.getPaymentSumByDate("2017", "10", "20");
-        double paymentSum21102017 = parkingEventService.getPaymentSumByDate("2017", "10", "21");
+        double paymentSum20102017 = parkingEventService.getPaymentSumByDate("20", "10", "2017");
+        double paymentSum21102017 = parkingEventService.getPaymentSumByDate("21", "10", "2017");
         //then
         Assertions.assertThat(paymentSum20102017).isEqualTo(15.0);
         Assertions.assertThat(paymentSum21102017).isEqualTo(7);

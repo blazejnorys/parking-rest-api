@@ -21,18 +21,18 @@ public class Driver {
     private String surname;
     private String car;
     private String bankAccountNumber;
-    private boolean isVip;
     @OneToOne
     ParkingMeter parkingMeter;
+    private ClientType clientType;
 
     public Driver() {
     }
 
-    public Driver(String name, String surname, String car, String bankAccountNumber, boolean isVip) {
+    public Driver(String name, String surname, String car, String bankAccountNumber, ClientType clientType) {
         this.name = name;
         this.surname = surname;
         this.car = car;
         this.bankAccountNumber = bankAccountNumber;
-        this.isVip = isVip;
+        this.clientType = clientType;
     }
 }

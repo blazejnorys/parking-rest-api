@@ -1,9 +1,7 @@
 package com.demo.service;
 
 import com.demo.model.Driver;
-import com.demo.model.ParkingMeter;
 import com.demo.repository.DriverRepository;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +9,6 @@ import java.util.List;
 
 
 @Service
-@Data
 public class DriverService {
 
     @Autowired

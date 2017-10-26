@@ -50,7 +50,7 @@ public class ParkingEventControllerTest extends AbstractTransactionalJUnit4Sprin
 
     @Test
     public void shouldReturnPaymentSumByDate() throws Exception {
-        mvc.perform(get("/events-sum-date/2000/01/01")
+        mvc.perform(get("/events-sum-date/01/01/2000")
                 .contentType(mediaType))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(mediaType))

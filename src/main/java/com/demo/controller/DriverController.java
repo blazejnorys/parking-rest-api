@@ -14,13 +14,16 @@ import java.util.List;
 @RestController
 public class DriverController {
 
-    @Autowired
     private DriverService driverService;
-    @Autowired
     private ParkingMeterService parkingMeterService;
-    @Autowired
     private ParkingEventService parkingEventService;
 
+    @Autowired
+    public DriverController(DriverService driverService, ParkingMeterService parkingMeterService, ParkingEventService parkingEventService) {
+        this.driverService = driverService;
+        this.parkingMeterService = parkingMeterService;
+        this.parkingEventService = parkingEventService;
+    }
 
     @GetMapping("/drivers")
     public List<Driver> getAllDrivers() {
@@ -36,34 +39,30 @@ public class DriverController {
     }
 
     @PostMapping("start/{driverId}/{parkingMeterId}")
-    public String startParkingMeter(
+    public void startParkingMeter(
             @PathVariable Long driverId,
             @PathVariable Long parkingMeterId
     ) {
         ParkingMeter parkingMeter = parkingMeterService.findById(parkingMeterId);
         if (parkingMeter.isOccupied()) {
-            return "This spot is occupied. Please choose another one";
         }
         Driver driver = driverService.findById(driverId);
         driver.setParkingMeter(parkingMeter);
         parkingMeterService.startParkingMeter(parkingMeter);
         parkingMeterService.update(parkingMeter);
         driverService.update(driver);
-        return "You have chosen spot nr " + parkingMeterId;
     }
 
     @PostMapping("stop/{driverId}")
-    public String stopParkingMeter(
+    public void stopParkingMeter(
             @PathVariable Long driverId
     ) {
         Driver driver = driverService.findById(driverId);
         ParkingMeter parkingMeter = driver.getParkingMeter();
-        parkingMeterService.stopParkingMeter(parkingMeter,driver);
-        double calculatedAmountToBePaid = parkingMeterService.calculateAmountToBePaid(parkingMeter, driver);
+        parkingMeterService.stopParkingMeter(parkingMeter, driver);
+        double calculatedAmountToBePaid = parkingMeterService.calculateParkingRate(parkingMeter, driver);
         parkingMeterService.chargeDriverAccount(driver, calculatedAmountToBePaid);
         parkingMeterService.reset(parkingMeter);
         parkingEventService.addNewEvent(calculatedAmountToBePaid, parkingMeter.getEndTime());
-        return "You sent a payment of " + calculatedAmountToBePaid + "PLN";
-
     }
 }

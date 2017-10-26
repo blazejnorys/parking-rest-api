@@ -12,8 +12,12 @@ import java.util.List;
 @RestController
 public class ParkingMeterController {
 
-    @Autowired
     private ParkingMeterService parkingMeterService;
+
+    @Autowired
+    public ParkingMeterController(ParkingMeterService parkingMeterService) {
+        this.parkingMeterService = parkingMeterService;
+    }
 
     @PostMapping("parking-meter")
     public ParkingMeter addParkingMeter() {

@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import com.demo.model.ClientType;
 import com.demo.model.Driver;
 import com.demo.model.ParkingMeter;
 import org.assertj.core.api.Assertions;
@@ -88,7 +89,7 @@ public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTe
     public void shouldStopParkingMeter() {
         //given
         ParkingMeter parkingMeter = new ParkingMeter(true, new Timestamp(10L), null);
-        Driver driver = new Driver("TestDriverName", "TestDriveSurname", "TestDriverCar", "43523455234", false);
+        Driver driver = new Driver("TestDriverName", "TestDriveSurname", "TestDriverCar", "43523455234", ClientType.REGULAR);
         driver.setParkingMeter(parkingMeter);
         //when
         parkingMeterService.stopParkingMeter(parkingMeter, driver);
@@ -113,11 +114,11 @@ public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTe
     public void shouldCalculateAmountToBePaidForRegularAndVipDriver() {
         //given
         ParkingMeter parkingMeter = new ParkingMeter(false, new Timestamp(946717810000L), new Timestamp(946726810000L));  //01.01.2000 10:10:10  --->  01.01.2000 12:40:10
-        Driver testDriverRegular = new Driver("TestDriverName", "TestDriveSurname", "TestDriverCar", "23123123", false);
-        Driver testDriverVip = new Driver("TestDriverName1", "TestDriveSurname1", "TestDriverCar1", "324524234", true);
+        Driver testDriverRegular = new Driver("TestDriverName", "TestDriveSurname", "TestDriverCar", "23123123", ClientType.REGULAR);
+        Driver testDriverVip = new Driver("TestDriverName1", "TestDriveSurname1", "TestDriverCar1", "324524234", ClientType.VIP);
         //when
-        double amountToBePaidByRegular = parkingMeterService.calculateAmountToBePaid(parkingMeter, testDriverRegular);
-        double amountToBePaidByVip = parkingMeterService.calculateAmountToBePaid(parkingMeter, testDriverVip);
+        double amountToBePaidByRegular = parkingMeterService.calculateParkingRate(parkingMeter, testDriverRegular);
+        double amountToBePaidByVip = parkingMeterService.calculateParkingRate(parkingMeter, testDriverVip);
         //then
         Assertions.assertThat(amountToBePaidByRegular).isEqualTo(7.0);
         Assertions.assertThat(amountToBePaidByVip).isEqualTo(5.0);

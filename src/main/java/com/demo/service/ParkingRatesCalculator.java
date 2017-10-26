@@ -1,8 +1,8 @@
 package com.demo.service;
 
+import com.demo.model.Driver;
+
 public interface ParkingRatesCalculator {
 
-    double calculateParkingRateRegular(double time);
-
-    double calculateParkingRateVip(double time);
+    int calculateParkingRate(int time, Driver driver);
 }
