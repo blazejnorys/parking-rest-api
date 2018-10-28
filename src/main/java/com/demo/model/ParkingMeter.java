@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -19,6 +20,9 @@ public class ParkingMeter {
     private boolean occupied = false;
     private Timestamp startTime;
     private Timestamp endTime;
+
+    @Version
+    private Integer version;
 
     public ParkingMeter() {
     }

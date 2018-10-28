@@ -1,13 +1,17 @@
 package com.demo.controller;
 
 
+import com.demo.exception.ExceptionControllerAdvice;
 import com.demo.model.Driver;
 import com.demo.model.ParkingMeter;
 import com.demo.service.DriverService;
 import com.demo.service.ParkingEventService;
 import com.demo.service.ParkingMeterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +22,7 @@ public class DriverController {
     private DriverService driverService;
     private ParkingMeterService parkingMeterService;
     private ParkingEventService parkingEventService;
+    private ExceptionControllerAdvice exceptionControllerAdvice;
 
     @Autowired
     public DriverController(DriverService driverService, ParkingMeterService parkingMeterService, ParkingEventService parkingEventService) {
@@ -46,6 +51,7 @@ public class DriverController {
     ) {
         ParkingMeter parkingMeter = parkingMeterService.findById(parkingMeterId);
         if (parkingMeter.isOccupied()) {
+            throw new IllegalStateException();
         }
         Driver driver = driverService.findById(driverId);
         driver.setParkingMeter(parkingMeter);
