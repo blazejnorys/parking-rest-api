@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -34,8 +35,8 @@ public class ParkingEventControllerTest extends AbstractTransactionalJUnit4Sprin
 
     @Before
     public void before() {
-        parkingEventService.addNewEvent(3.33, new Timestamp(946681200000L));// 01.01.2000 00:00:00
-        parkingEventService.addNewEvent(4.44, new Timestamp(949359600000L));// 01.02.2000 00:00:00
+        parkingEventService.addNewEvent(new BigDecimal(3.33), new Timestamp(946681200000L));// 01.01.2000 00:00:00
+        parkingEventService.addNewEvent(new BigDecimal(4.44), new Timestamp(949359600000L));// 01.02.2000 00:00:00
     }
 
     @Test

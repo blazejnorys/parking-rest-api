@@ -2,15 +2,18 @@ package com.demo.service;
 
 import com.demo.model.ClientType;
 
+import java.math.BigDecimal;
+
 public class PricingPLN extends Pricing {
 
-    private final int firstHourRegularFee = 100;
-    private final int secondHourRegularFee = 200;
-    private final double multiplierForRegular = 2;
+    private final BigDecimal firstHourRegularFee = new BigDecimal(1);
+    private final BigDecimal secondHourRegularFee = new BigDecimal(2);
+    private final BigDecimal multiplierForRegular = new BigDecimal(2);
 
-    private final int firstHourVipFee = 0;
-    private final int secondHourVipFee = 200;
-    private final double multiplierForVip = 1.5;
+
+    private final BigDecimal firstHourVipFee = BigDecimal.ZERO;
+    private final BigDecimal secondHourVipFee = new BigDecimal(2);
+    private final BigDecimal multiplierForVip = new BigDecimal(1.5);
 
     public PricingPLN(ClientType clientType) {
         if (clientType == ClientType.REGULAR) {

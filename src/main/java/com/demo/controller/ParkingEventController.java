@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
 
@@ -26,12 +27,12 @@ public class ParkingEventController {
     }
 
     @GetMapping("/events-sum")
-    public double getPaymentSum() {
+    public BigDecimal getPaymentSum() {
         return parkingEventService.getPaymentSum();
     }
 
     @GetMapping("/events-sum-date/{day}/{month}/{year}")
-    public double getPaymentByDate(
+    public BigDecimal getPaymentByDate(
             @PathVariable String day,
             @PathVariable String month,
             @PathVariable String year

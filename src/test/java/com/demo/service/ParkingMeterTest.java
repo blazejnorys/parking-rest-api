@@ -4,6 +4,8 @@ import com.demo.model.ClientType;
 import com.demo.model.Driver;
 import com.demo.model.ParkingMeter;
 import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -117,10 +120,10 @@ public class ParkingMeterTest extends AbstractTransactionalJUnit4SpringContextTe
         Driver testDriverRegular = new Driver("TestDriverName", "TestDriveSurname", "TestDriverCar", "23123123", ClientType.REGULAR);
         Driver testDriverVip = new Driver("TestDriverName1", "TestDriveSurname1", "TestDriverCar1", "324524234", ClientType.VIP);
         //when
-        double amountToBePaidByRegular = parkingMeterService.calculateParkingRate(parkingMeter, testDriverRegular);
-        double amountToBePaidByVip = parkingMeterService.calculateParkingRate(parkingMeter, testDriverVip);
+        BigDecimal amountToBePaidByRegular = parkingMeterService.calculateParkingRate(parkingMeter, testDriverRegular);
+        BigDecimal amountToBePaidByVip = parkingMeterService.calculateParkingRate(parkingMeter, testDriverVip);
         //then
-        Assertions.assertThat(amountToBePaidByRegular).isEqualTo(7.0);
-        Assertions.assertThat(amountToBePaidByVip).isEqualTo(5.0);
+        Assert.assertThat(amountToBePaidByRegular,  Matchers.comparesEqualTo(new BigDecimal(7)));
+        Assert.assertThat(amountToBePaidByVip,  Matchers.comparesEqualTo(new BigDecimal(5)));
     }
 }

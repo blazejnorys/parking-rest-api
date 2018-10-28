@@ -3,6 +3,8 @@ package com.demo.service;
 import com.demo.model.ClientType;
 import com.demo.model.Driver;
 import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.math.BigDecimal;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,18 +34,17 @@ public class ParkingRatesCalculatorServiceTest extends AbstractTransactionalJUni
         //given
         Driver regularDriver = new Driver("Regular", "Regular", "Regular", "Regular", ClientType.REGULAR);
         //when
-        int paymentForOneHour = parkingRatesCalculator.calculateParkingRate(oneHour, regularDriver);
-        int paymentForTwoHours = parkingRatesCalculator.calculateParkingRate(twoHours, regularDriver);
-        int paymentForThreeHours = parkingRatesCalculator.calculateParkingRate(threeHours, regularDriver);
-        int paymentForFourHours = parkingRatesCalculator.calculateParkingRate(fourHours, regularDriver);
-        int paymentForFiveHours = parkingRatesCalculator.calculateParkingRate(fiveHours, regularDriver);
+        BigDecimal paymentForOneHour = parkingRatesCalculator.calculateParkingRate(oneHour, regularDriver);
+        BigDecimal paymentForTwoHours = parkingRatesCalculator.calculateParkingRate(twoHours, regularDriver);
+        BigDecimal paymentForThreeHours = parkingRatesCalculator.calculateParkingRate(threeHours, regularDriver);
+        BigDecimal paymentForFourHours = parkingRatesCalculator.calculateParkingRate(fourHours, regularDriver);
+        BigDecimal paymentForFiveHours = parkingRatesCalculator.calculateParkingRate(fiveHours, regularDriver);
         //then
-        Assertions.assertThat(paymentForOneHour).isEqualTo(100);
-        Assertions.assertThat(paymentForTwoHours).isEqualTo(100 + 200);
-        Assertions.assertThat(paymentForThreeHours).isEqualTo(100 + 200 + 400);
-        Assertions.assertThat(paymentForFourHours).isEqualTo(100 + 200 + 400 + 800);
-        Assertions.assertThat(paymentForFiveHours).isEqualTo(100 + 200 + 400 + 800 + 1600);
-
+        Assert.assertThat(paymentForOneHour,  Matchers.comparesEqualTo(new BigDecimal(1)));
+        Assert.assertThat(paymentForTwoHours,  Matchers.comparesEqualTo(new BigDecimal(3)));
+        Assert.assertThat(paymentForThreeHours,  Matchers.comparesEqualTo(new BigDecimal(7)));
+        Assert.assertThat(paymentForFourHours,  Matchers.comparesEqualTo(new BigDecimal(15)));
+        Assert.assertThat(paymentForFiveHours,  Matchers.comparesEqualTo(new BigDecimal(31)));
     }
 
     @Test
@@ -49,16 +52,16 @@ public class ParkingRatesCalculatorServiceTest extends AbstractTransactionalJUni
         //given
         Driver vipDriver = new Driver("Vip", "Vip", "Vip", "Vip", ClientType.VIP);
         //when
-        int paymentForOneHour = parkingRatesCalculator.calculateParkingRate(oneHour, vipDriver);
-        int paymentForTwoHours = parkingRatesCalculator.calculateParkingRate(twoHours, vipDriver);
-        int paymentForThreeHours = parkingRatesCalculator.calculateParkingRate(threeHours, vipDriver);
-        int paymentForFourHours = parkingRatesCalculator.calculateParkingRate(fourHours, vipDriver);
-        int paymentForFiveHours = parkingRatesCalculator.calculateParkingRate(fiveHours, vipDriver);
+        BigDecimal paymentForOneHour = parkingRatesCalculator.calculateParkingRate(oneHour, vipDriver);
+        BigDecimal paymentForTwoHours = parkingRatesCalculator.calculateParkingRate(twoHours, vipDriver);
+        BigDecimal paymentForThreeHours = parkingRatesCalculator.calculateParkingRate(threeHours, vipDriver);
+        BigDecimal paymentForFourHours = parkingRatesCalculator.calculateParkingRate(fourHours, vipDriver);
+        BigDecimal paymentForFiveHours = parkingRatesCalculator.calculateParkingRate(fiveHours, vipDriver);
         //then
-        Assertions.assertThat(paymentForOneHour).isEqualTo(0);
-        Assertions.assertThat(paymentForTwoHours).isEqualTo(200);
-        Assertions.assertThat(paymentForThreeHours).isEqualTo(200 + 300);
-        Assertions.assertThat(paymentForFourHours).isEqualTo(200 + 300 + 450);
-        Assertions.assertThat(paymentForFiveHours).isEqualTo(200 + 300 + 450 + 675);
+        Assert.assertThat(paymentForOneHour,  Matchers.comparesEqualTo(BigDecimal.ZERO));
+        Assert.assertThat(paymentForTwoHours,  Matchers.comparesEqualTo(new BigDecimal(2)));
+        Assert.assertThat(paymentForThreeHours,  Matchers.comparesEqualTo(new BigDecimal(5)));
+        Assert.assertThat(paymentForFourHours,  Matchers.comparesEqualTo(new BigDecimal(9.5)));
+        Assert.assertThat(paymentForFiveHours,  Matchers.comparesEqualTo(new BigDecimal(16.25)));
     }
 }

@@ -6,11 +6,14 @@ import com.demo.repository.ParkingMeterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.TimeZone;
+
+import static java.math.BigDecimal.ROUND_HALF_UP;
 
 @Service
 public class ParkingMeterService {
@@ -34,14 +37,12 @@ public class ParkingMeterService {
 
     public void update(ParkingMeter parkingMeter) {
         parkingMeterRepository.saveAndFlush(parkingMeter);
-
     }
 
     public void reset(ParkingMeter parkingMeter) {
         parkingMeter.setStartTime(null);
         parkingMeter.setEndTime(null);
         parkingMeterRepository.saveAndFlush(parkingMeter);
-
     }
 
     public void startParkingMeter(ParkingMeter parkingMeter) {
@@ -55,20 +56,19 @@ public class ParkingMeterService {
         parkingMeter.setEndTime(new Timestamp(System.currentTimeMillis()));
     }
 
-    private int getDifferenceInHours(ParkingMeter parkingMeter){
-        return (int)Math.ceil((double) java.time.Duration.
-                between(parkingMeter.getStartTime().toLocalDateTime(),parkingMeter.getEndTime().toLocalDateTime())
+    private int getDifferenceInHours(ParkingMeter parkingMeter) {
+        return (int) Math.ceil((double) java.time.Duration.
+                between(parkingMeter.getStartTime().toLocalDateTime(), parkingMeter.getEndTime().toLocalDateTime())
                 .getSeconds() / 3600);
     }
 
-    public double calculateParkingRate(ParkingMeter parkingMeter, Driver driver) {
+    public BigDecimal calculateParkingRate(ParkingMeter parkingMeter, Driver driver) {
         int diffInHours = this.getDifferenceInHours(parkingMeter);
-            return (parkingRatesCalculator.calculateParkingRate(diffInHours,driver))/100;
+        return (parkingRatesCalculator.calculateParkingRate(diffInHours, driver));
     }
 
-    public void chargeDriverAccount(Driver driver, double amountToBePaid) {
+    public void chargeDriverAccount(Driver driver, BigDecimal amountToBePaid) {
         String bankAccount = driver.getBankAccountNumber();
-        double amountToBePaidAsDouble = amountToBePaid;
-        System.out.println("You sent a payment of " + amountToBePaidAsDouble + "PLN");
+        System.out.println("You sent a payment of " + amountToBePaid + "PLN");
     }
 }

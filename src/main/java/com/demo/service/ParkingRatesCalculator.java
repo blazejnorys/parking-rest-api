@@ -2,7 +2,12 @@ package com.demo.service;
 
 import com.demo.model.Driver;
 
+import java.math.BigDecimal;
+
 public interface ParkingRatesCalculator {
 
-    int calculateParkingRate(int time, Driver driver);
+    static final Integer FIRST_HOUR = 1;
+    static final Integer SECOND_HOUR = 2;
+
+    BigDecimal calculateParkingRate(int time, Driver driver);
 }

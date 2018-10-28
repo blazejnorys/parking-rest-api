@@ -9,6 +9,7 @@ import com.demo.service.ParkingMeterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -60,7 +61,7 @@ public class DriverController {
         Driver driver = driverService.findById(driverId);
         ParkingMeter parkingMeter = driver.getParkingMeter();
         parkingMeterService.stopParkingMeter(parkingMeter, driver);
-        double calculatedAmountToBePaid = parkingMeterService.calculateParkingRate(parkingMeter, driver);
+        BigDecimal calculatedAmountToBePaid = parkingMeterService.calculateParkingRate(parkingMeter, driver);
         parkingMeterService.chargeDriverAccount(driver, calculatedAmountToBePaid);
         parkingMeterService.reset(parkingMeter);
         parkingEventService.addNewEvent(calculatedAmountToBePaid, parkingMeter.getEndTime());

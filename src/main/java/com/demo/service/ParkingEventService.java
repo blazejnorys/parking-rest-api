@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
@@ -23,16 +24,16 @@ public class ParkingEventService {
         return parkingEventRepository.findAll();
     }
 
-    public void addNewEvent(double payment, Timestamp date) {
+    public void addNewEvent(BigDecimal payment, Timestamp date) {
         ParkingEvent parkingEvent = new ParkingEvent(payment, date);
         parkingEventRepository.saveAndFlush(parkingEvent);
     }
 
-    public double getPaymentSum() {
+    public BigDecimal getPaymentSum() {
         return parkingEventRepository.getPaymentSum();
     }
 
-    public double getPaymentSumByDate(String day, String month, String year) {
+    public BigDecimal getPaymentSumByDate(String day, String month, String year) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("ddMMyyyy");
         DateTime dateTimeStart = formatter.parseDateTime(day + month + year);
         DateTime dateTimeEnd = dateTimeStart.plusDays(1).minusMillis(1);
