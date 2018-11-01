@@ -3,21 +3,11 @@ package com.demo.service;
 
 import java.math.BigDecimal;
 
-public abstract class Pricing {
+interface Pricing {
 
-    BigDecimal firstHourFee;
-    BigDecimal secondHourFee;
-    BigDecimal multiplier;
+    BigDecimal getFirstHourPrice();
 
-    BigDecimal getFirstHourFee() {
-        return firstHourFee;
-    }
+    BigDecimal getSecondHourPrice();
 
-    BigDecimal getSecondHourFee() {
-        return secondHourFee;
-    }
-
-    BigDecimal getMultiplier() {
-        return multiplier;
-    }
+    BigDecimal getMultiplier();
 }
